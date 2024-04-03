@@ -11,115 +11,172 @@ MOCODO
 
 ## Etape 3
 
-Entrée du code dans MySQL
+Entrée du code dans MySQL. On force la conversion du type de serveur en InnoDB
 
-CREATE TABLE CANDIDAT (
-  PRIMARY KEY (id_candidat),
-  id_candidat VARCHAR(42) NOT NULL,
-  email       VARCHAR(42),
-  Git_Hub     VARCHAR(42),
-  departement VARCHAR(42)
+CREATE TABLE CANDIDAT(
+    id_candidat int NOT NULL AUTO_INCREMENT,
+    email VARCHAR(42),
+    Git_Hub VARCHAR(42),
+    departement VARCHAR(42),
+    PRIMARY KEY (id_candidat)
+); 
+CREATE TABLE CANDIDAT_CONTRAT(
+    id_candidat_contrat int not null AUTO_INCREMENT,
+    id_candidat int NOT NULL,
+    id_contrat int NOT NULL,
+    PRIMARY KEY (id_candidat_contrat),
+    FOREIGN KEY (id_candidat) REFERENCES CANDIDAT(id_candidat),
+    FOREIGN KEY (id_contrat) REFERENCES  TYPE_CONTRAT(id_contrat)
+); 
+
+CREATE TABLE CANDIDAT_EXPERIENCE(
+    id_candidat_experience int NOT null AUTO_INCREMENT,
+    id_candidat int NOT NULL,
+    id_experience int NOT NULL,
+    PRIMARY KEY (id_candidat_experience),
+    FOREIGN KEY (id_candidat) REFERENCES CANDIDAT(id_candidat),
+    FOREIGN KEY (id_experience) REFERENCES NIVEAU_EXPERIENCE(id_experience)
+); 
+
+CREATE TABLE CANDIDAT_FORMATION(
+    id_candidat_formation int NOT NULL AUTO_INCREMENT,
+    id_candidat int NOT NULL,
+    id_formation int NOT NULL,
+    PRIMARY KEY(id_candidat_formation),
+    FOREIGN KEY (id_candidat) REFERENCES CANDIDAT(id_candidat),
+    FOREIGN KEY (id_formation) REFERENCES FORMATION(id_formation)
+); 
+
+CREATE TABLE CANDIDAT_TECH(
+    id_candidat_tech int not null AUTO_INCREMENT,
+    id_candidat int NOT NULL,
+    id_tech int NOT NULL,
+    PRIMARY KEY (id_candidat_tech),
+    FOREIGN KEY (id_candidat) REFERENCES candidat(id_candidat),
+    FOREIGN KEY (id_tech) REFERENCES TECHNOLOGIE(id_tech)
+); 
+
+CREATE TABLE CANDIDAT_TYPE_REMOTE(
+    id_candidat_remote int AUTO_INCREMENT,
+    id_candidat int NOT NULL,
+    id_remote int NOT NULL,
+    PRIMARY KEY(id_candidat_remote),
+    FOREIGN KEY(id_candidat) REFERENCES candidat(id_candidat),
+    FOREIGN KEY(id_remote) REFERENCES TYPE_REMOTE(id_remote)
+); 
+
+CREATE TABLE EXPERIENCE_DETAIL(
+    id_experience_detail int not null AUTO_INCREMENT,
+    id_candidat int NOT NULL,
+    titre_poste VARCHAR(42),
+    description VARCHAR(150),
+    PRIMARY KEY (id_experience_detail),
+    FOREIGN KEY (id_candidat) REFERENCES candidat(id_candidat)
+); 
+
+CREATE TABLE FORMATION(
+    id_formation int NOT NULL AUTO_INCREMENT,
+    TYPE VARCHAR(42),
+    PRIMARY KEY (id_formation)
+); 
+
+CREATE TABLE NIVEAU_EXPERIENCE(
+    id_experience int NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(42),
+    PRIMARY KEY(id_experience)
+); 
+
+CREATE TABLE TECHNOLOGIE(
+    id_tech int NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(42),
+    PRIMARY KEY(id_tech)
+); 
+
+CREATE TABLE TYPE_CONTRAT(
+    id_contrat int NOT NULL AUTO_INCREMENT,
+    NAME VARCHAR(42),
+    PRIMARY KEY (id_contrat)
+); 
+
+CREATE TABLE TYPE_REMOTE(
+    id_remote int NOT NULL AUTO_INCREMENT,
+    TYPE VARCHAR(42),
+    PRIMARY KEY(id_remote)
+); 
+
+CREATE TABLE POSTE( 
+	id_poste int not null AUTO_INCREMENT,
+    name varchar(50),
+    PRIMARY KEY (id_poste)
+);
+CREATE TABLE CANDIDAT_POSTE(
+    id_candidat_poste int not null AUTO_INCREMENT,
+    id_candidat int,
+    id_poste int,
+    PRIMARY KEY (id_candidat_poste),
+    FOREIGN key (id_candidat) REFERENCES candidat(id_candidat),
+    FOREIGN KEY (id_poste) REFERENCES poste(id_poste)
 );
 
-CREATE TABLE CANDIDAT_CONTRAT (
-  PRIMARY KEY (id_candidat, id_contrat),
-  id_candidat         VARCHAR(42) NOT NULL,
-  id_contrat          VARCHAR(42) NOT NULL,
-  id_candidat_contrat VARCHAR(42)
-);
+ALTER TABLE
+    CANDIDAT ENGINE = INNODB;
+ALTER TABLE
+    CANDIDAT_CONTRAT ENGINE = INNODB;
+ALTER TABLE
+    CANDIDAT_EXPERIENCE ENGINE = INNODB;
+ALTER TABLE
+    CANDIDAT_FORMATION ENGINE = INNODB;
+ALTER TABLE
+    CANDIDAT_TECH ENGINE = INNODB;
+ALTER TABLE
+    CANDIDAT_TYPE_REMOTE ENGINE = INNODB;
+ALTER TABLE
+    EXPERIENCE_DETAIL ENGINE = INNODB;
+ALTER TABLE
+    FORMATION ENGINE = INNODB;
+ALTER TABLE
+    NIVEAU_EXPERIENCE ENGINE = INNODB;
+ALTER TABLE
+    TECHNOLOGIE ENGINE = INNODB;
+ALTER TABLE
+    TYPE_REMOTE ENGINE = INNODB;
+ALTER TABLE
+    TYPE_CONTRAT ENGINE = INNODB;
+ALTER TABLE
+	POSTE ENGINE = INNODB;
+ALTER TABLE
+	CANDIDAT_POSTE ENGINE = INNODB;
 
-CREATE TABLE CANDIDAT_EXPERIENCE (
-  PRIMARY KEY (id_candidat, id_experience),
-  id_candidat            VARCHAR(42) NOT NULL,
-  id_experience          VARCHAR(42) NOT NULL,
-  id_candidat_experience VARCHAR(42)
-);
+ALTER TABLE
+    CANDIDAT_CONTRAT ADD FOREIGN KEY(id_contrat) REFERENCES TYPE_CONTRAT(id_contrat);
+ALTER TABLE
+    CANDIDAT_CONTRAT ADD FOREIGN KEY(id_candidat) REFERENCES CANDIDAT(id_candidat);
+ALTER TABLE
+    CANDIDAT_EXPERIENCE ADD FOREIGN KEY(id_experience) REFERENCES NIVEAU_EXPERIENCE(id_experience);
+ALTER TABLE
+    CANDIDAT_EXPERIENCE ADD FOREIGN KEY(id_candidat) REFERENCES CANDIDAT(id_candidat);
+ALTER TABLE
+    CANDIDAT_FORMATION ADD FOREIGN KEY(id_formation) REFERENCES FORMATION(id_formation);
+ALTER TABLE
+    CANDIDAT_FORMATION ADD FOREIGN KEY(id_candidat) REFERENCES CANDIDAT(id_candidat);
+ALTER TABLE
+    CANDIDAT_TECH ADD FOREIGN KEY(id_tech) REFERENCES TECHNOLOGIE(id_tech);
+ALTER TABLE
+    CANDIDAT_TECH ADD FOREIGN KEY(id_candidat) REFERENCES CANDIDAT(id_candidat);
+ALTER TABLE
+    CANDIDAT_TYPE_REMOTE ADD FOREIGN KEY(id_remote) REFERENCES TYPE_REMOTE(id_remote);
+ALTER TABLE
+    CANDIDAT_TYPE_REMOTE ADD FOREIGN KEY(id_candidat) REFERENCES CANDIDAT(id_candidat);
+ALTER TABLE
+    EXPERIENCE_DETAIL ADD FOREIGN KEY(id_candidat) REFERENCES CANDIDAT(id_candidat);
+ALTER TABLE
+	CANDIDAT_POSTE ADD FOREIGN KEY(id_candidat) REFERENCES candidat(id_candidat);
+ALTER TABLE
+	CANDIDAT_POSTE ADD FOREIGN KEY(id_poste) REFERENCES poste(id_poste);
 
-CREATE TABLE CANDIDAT_FORMATION (
-  PRIMARY KEY (id_candidat, id_formation),
-  id_candidat           VARCHAR(42) NOT NULL,
-  id_formation          VARCHAR(42) NOT NULL,
-  id_candidat_formation VARCHAR(42)
-);
 
-CREATE TABLE CANDIDAT_TECH (
-  PRIMARY KEY (id_candidat, id_tech),
-  id_candidat      VARCHAR(42) NOT NULL,
-  id_tech          VARCHAR(42) NOT NULL,
-  id_candidat_tech VARCHAR(42)
-);
+Les dernières lignes permettent d'afficher les liens entre les tables dans le concepteur de MySQL.
 
-CREATE TABLE CANDIDAT_TYPE_REMOTE (
-  PRIMARY KEY (id_candidat, id_remote),
-  id_candidat        VARCHAR(42) NOT NULL,
-  id_remote          VARCHAR(42) NOT NULL,
-  id_candidat_remote VARCHAR(42)
-);
 
-CREATE TABLE EXPERIENCE_DETAIL (
-  PRIMARY KEY (id_candidat),
-  id_candidat          VARCHAR(42) NOT NULL,
-  id_experience_detail VARCHAR(42),
-  titre_poste          VARCHAR(42),
-  description          VARCHAR(42)
-);
-
-CREATE TABLE FORMATION (
-  PRIMARY KEY (id_formation),
-  id_formation VARCHAR(42) NOT NULL,
-  type         VARCHAR(42)
-);
-
-CREATE TABLE NIVEAU_EXPERIENCE (
-  PRIMARY KEY (id_experience),
-  id_experience VARCHAR(42) NOT NULL,
-  name          VARCHAR(42)
-);
-
-CREATE TABLE TECHNOLOGIE (
-  PRIMARY KEY (id_tech),
-  id_tech VARCHAR(42) NOT NULL,
-  name    VARCHAR(42)
-);
-
-CREATE TABLE TYPE_CONTRAT (
-  PRIMARY KEY (id_contrat),
-  id_contrat VARCHAR(42) NOT NULL,
-  name       VARCHAR(42)
-);
-
-CREATE TABLE TYPE_REMOTE (
-  PRIMARY KEY (id_remote),
-  id_remote VARCHAR(42) NOT NULL,
-  type      VARCHAR(42)
-);
-
-ALTER TABLE CANDIDAT ENGINE=INNODB;
-ALTER TABLE CANDIDAT_CONTRAT ENGINE=INNODB;
-ALTER TABLE CANDIDAT_EXPERIENCE ENGINE=INNODB;
-ALTER TABLE CANDIDAT_FORMATION ENGINE=INNODB;
-ALTER TABLE CANDIDAT_TECH ENGINE=INNODB;
-ALTER TABLE CANDIDAT_TYPE_REMOTE  ENGINE=INNODB;
-ALTER TABLE EXPERIENCE_DETAIL ENGINE=INNODB;
-ALTER TABLE FORMATION ENGINE=INNODB;
-ALTER TABLE NIVEAU_EXPERIENCE  ENGINE=INNODB;
-ALTER TABLE TECHNOLOGIE ENGINE=INNODB;
-ALTER TABLE TYPE_REMOTE ENGINE=INNODB;
-ALTER TABLE TYPE_CONTRAT ENGINE=INNODB;
-
-ALTER TABLE CANDIDAT_CONTRAT ADD FOREIGN KEY (id_contrat) REFERENCES TYPE_CONTRAT (id_contrat);
-ALTER TABLE CANDIDAT_CONTRAT ADD FOREIGN KEY (id_candidat) REFERENCES CANDIDAT (id_candidat);
-
-ALTER TABLE CANDIDAT_EXPERIENCE ADD FOREIGN KEY (id_experience) REFERENCES NIVEAU_EXPERIENCE (id_experience);
-ALTER TABLE CANDIDAT_EXPERIENCE ADD FOREIGN KEY (id_candidat) REFERENCES CANDIDAT (id_candidat);
-
-ALTER TABLE CANDIDAT_FORMATION ADD FOREIGN KEY (id_formation) REFERENCES FORMATION (id_formation);
-ALTER TABLE CANDIDAT_FORMATION ADD FOREIGN KEY (id_candidat) REFERENCES CANDIDAT (id_candidat);
-
-ALTER TABLE CANDIDAT_TECH ADD FOREIGN KEY (id_tech) REFERENCES TECHNOLOGIE (id_tech);
-ALTER TABLE CANDIDAT_TECH ADD FOREIGN KEY (id_candidat) REFERENCES CANDIDAT (id_candidat);
-
-ALTER TABLE CANDIDAT_TYPE_REMOTE ADD FOREIGN KEY (id_remote) REFERENCES TYPE_REMOTE (id_remote);
-ALTER TABLE CANDIDAT_TYPE_REMOTE ADD FOREIGN KEY (id_candidat) REFERENCES CANDIDAT (id_candidat);
-
-ALTER TABLE EXPERIENCE_DETAIL ADD FOREIGN KEY (id_candidat) REFERENCES CANDIDAT (id_candidat);
+Aprés cela ont ajoute des valeurs dans les tables : 
+INSERT INTO `candidat` (`email`, `Git_Hub`, `departement`) VALUES ( 'lorem@sfr.fr', 'loremipsum', '69');
