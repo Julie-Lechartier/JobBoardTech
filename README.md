@@ -177,6 +177,25 @@ ALTER TABLE
 
 Les dernières lignes permettent d'afficher les liens entre les tables dans le concepteur de MySQL.
 
+## Ajout des valeurs dans les tables 
 
-Aprés cela ont ajoute des valeurs dans les tables : 
 INSERT INTO `candidat` (`email`, `Git_Hub`, `departement`) VALUES ( 'lorem@sfr.fr', 'loremipsum', '69');
+	Ici on créé un nouveau candidat dans la table candidat 
+
+## Ajout des requêtes
+
+On rempli ensuite les tables de valeur pour pouvoir tester différentes requêtes :
+
+SELECT * FROM candidat_poste JOIN candidat ON candidat_poste.id_candidat = candidat.id_candidat WHERE candidat_poste.id_poste = '3' AND candidat.departement = '01';
+	on affiche ici tout les candidat qui sont développeur back-end et qui sont dans le département 01
+
+ SELECT * FROM candidat_experience JOIN niveau_experience ON candidat_experience.id_experience = niveau_experience.id_experience WHERE candidat_experience.id_experience = '3';
+ 	on affiche tout les candidats avec un niveau d'expérience Senior
+
+SELECT *
+FROM candidat_type_remote
+JOIN candidat_tech ON candidat_type_remote.id_candidat = candidat_tech.id_candidat
+WHERE candidat_type_remote.id_remote = '2' AND candidat_tech.id_tech = '8';
+	on afficher les candidats avec une utilisation de PHP et qui sont en full remote
+
+ 
